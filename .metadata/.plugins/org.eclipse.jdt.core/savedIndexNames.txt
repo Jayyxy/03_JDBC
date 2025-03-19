@@ -1,5 +1,0 @@
-INDEX VERSION 1.134+/Users/jay/homeworkspace/03_jdbc/.metadata/.plugins/org.eclipse.jdt.core
-1865797976.index
-3760400477.index
-597375286.index
-2032826855.index
