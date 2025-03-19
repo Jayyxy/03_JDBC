@@ -1,58 +1,52 @@
 package edu.kh.jdbc.view;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import edu.kh.jdbc.dto.User;
 import edu.kh.jdbc.service.UserService;
 
 // View : 사용자와 직접 상호작용하는 화면(UI)를 담당,
 // 입력을 받고 결과를 출력하는 역할
-
 public class UserView {
 
-	// 필드 
+	// 필드
 	private Scanner sc = new Scanner(System.in);
 	private UserService service = new UserService();
-	
-	
-	// 메서드 
-	/*
-	 * JDBCTemplate 사용 테스트 */
+
+	// 메서드
+
+	/**
+	 * JDBCTemplate 사용 테스트
+	 */
 	public void test() {
-		
+
 		// 입력된 ID와 일치하는 USER 정보 조회
 		System.out.print("ID 입력 : ");
 		String input = sc.next();
-		
+
 		// 서비스 호출 후 결과 반환 받기
 		User user = service.selectId(input);
-		// Userservice 에 자동으로 메서드 생성
-		
-		// 결과에 따라 사용자에게 보열줄 응답화면 
-		if(user == null) {
+
+		// 결과에 따라 사용자에게 보여줄 응답화면 결정
+		if (user == null) {
 			System.out.println("없어용");
-			
-		}else {
-			System.out.println();
+		} else {
+			System.out.println(user);
 		}
+
 	}
-}
 
-
-/*
- * */
- 
-public void test{
-	
-	
-	/** User 관리 프로그램 메인 메뉴
+	/**
+	 * User 관리 프로그램 메인 메뉴
 	 */
 	public void mainMenu() {
-		
+
 		int input = 0;
-		
+
 		do {
 			try {
-				
+
 				System.out.println("\n===== User 관리 프로그램 =====\n");
 				System.out.println("1. User 등록(INSERT)");
 				System.out.println("2. User 전체 조회(SELECT)");
@@ -63,13 +57,14 @@ public void test{
 				System.out.println("7. User 등록(아이디 중복 검사)");
 				System.out.println("8. 여러 User 등록하기");
 				System.out.println("0. 프로그램 종료");
-				
+
 				System.out.print("메뉴 선택 : ");
 				input = sc.nextInt();
 				sc.nextLine(); // 버퍼에 남은 개행문자 제거
-				
-				switch(input) {
+
+				switch (input) {
 				case 1: insertUser(); break;
+				/*
 				case 2: selectAll(); break;
 				case 3: selectName(); break;
 				case 4: selectUser(); break;
@@ -77,26 +72,74 @@ public void test{
 				case 6: updateName(); break;
 				case 7: insertUser2(); break;
 				case 8: multiInsertUser(); break;
-				
-				case 0 : System.out.println("\n[프로그램 종료]\n"); break;
+				*/
+				case 0: System.out.println("\n[프로그램 종료]\n"); break;
 				default: System.out.println("\n[메뉴 번호만 입력하세요]\n");
 				}
-				
+
 				System.out.println("\n-------------------------------------\n");
-				
+
 			} catch (InputMismatchException e) {
 				// Scanner를 이용한 입력 시 자료형이 잘못된 경우
 				System.out.println("\n***잘못 입력 하셨습니다***\n");
-				
+
 				input = -1; // 잘못 입력해서 while문 멈추는걸 방지
 				sc.nextLine(); // 입력 버퍼에 남아있는 잘못된 문자 제거
-				
+
 			} catch (Exception e) {
 				// 발생되는 예외를 모두 해당 catch 구문으로 모아서 처리
 				e.printStackTrace();
 			}
-			
-		}while(input != 0);
-		
+
+		} while (input != 0);
+
 	} // mainMenu() 종료
+
+	
+	/**
+	 * 1. User 등록 관련 View
+	 */
+	private void insertUser() throws Exception{
+		
+		System.out.println("\n=== 1. User 등록 ===\n");
+		
+		System.out.print("ID : ");
+		String userId = sc.next();
+		
+		System.out.print("PW : ");
+		String userPw = sc.next();
+		
+		System.out.print("Name : ");
+		String userName = sc.next();
+		
+		// 입력받은 값 3개를 한번에 묶어서 전달할 수 있도록
+		// User DTO 객체를 생성한 후 필드에 값을 세팅
+		User user = new User();
+		
+		// setter 이용
+		user.setUserId(userId);
+		user.setUserPw(userPw);
+		user.setUserName(userName);
+		
+		
+		// 서비스 호출(INSERT) 후 결과 반환(int, 결과 행의 개수)받기
+		int result = service.insertUser(user);
+		
+		// 반환된 결과에 따라 출력할 내용 선택
+		if(result > 0) {
+			System.out.println("\n" + userId + "사용자가 등록되었습니다.\n");
+			
+		} else {
+			System.out.println("\n***등록 실패***\n");
+			
+		}
+		
+	}
+
+
+	
+	
+	
+	
+	
 }
